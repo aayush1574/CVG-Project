@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type RefObject } from 'react';
+import { useEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { Activity, ArrowDown, ArrowRight, Check, ChevronDown, ChevronLeft, ChevronRight, ClipboardCheck, Expand, Heart, Leaf, Pause, Play, ShieldCheck, Sparkles, Upload, X } from 'lucide-react';
 import ContourField, { type ContourFieldHandle } from './ContourField';
 import useWorkflowInteraction from './useWorkflowInteraction';
@@ -6,7 +6,7 @@ import useScrollMotion from './useScrollMotion';
 import type { MotionPreference } from './useMotionPreference';
 import './welcome-motion.css';
 
-type Props = { motion: MotionPreference; hasDetails: boolean; onStart: () => void; onSample: () => void; onLearn: () => void };
+type Props = { demos: ReactNode; motion: MotionPreference; hasDetails: boolean; onStart: () => void; onSample: () => void; onLearn: () => void };
 type Scene = 'motion' | 'care' | 'calm';
 const chapters = [
   { title:'Bring your details', eyebrow:'01 / ADD WHAT YOU KNOW', heading:'Start with the pieces you have.', body:'A report, an ECG, or a few details entered by hand. You don’t need to have everything to get started.', icon:Upload, action:'Add your details', labels:['Health details','Lab measurements','Optional ECG'] },
@@ -43,7 +43,7 @@ function AmbientVideo({src,poster,enabled,className,onPlayback}:{src:string;post
   </div>;
 }
 
-export default function WelcomeExperience({motion,hasDetails,onStart,onSample,onLearn}:Props){
+export default function WelcomeExperience({demos,motion,hasDetails,onStart,onSample,onLearn}:Props){
   const { enabled: motionEnabled, paused, reduced, saveData } = motion;
   const [scene,setScene]=useState<Scene>('motion');
   const [playing,setPlaying]=useState(false);
@@ -100,6 +100,7 @@ export default function WelcomeExperience({motion,hasDetails,onStart,onSample,on
       <div className="wm-perspective-feature" role="tabpanel" id={`wm-context-panel-${perspective}`} aria-labelledby={`wm-context-tab-${perspective}`}><div className="wm-perspective-image"><img key={photo.image} src={photo.image} alt={photo.alt} loading="lazy" width="1200" height="800"/><div className="wm-image-corner"><span>0{perspective+1} / EVERYDAY PERSPECTIVES</span><button ref={photoTrigger} onClick={()=>setExpandedPhoto(true)} aria-label={`Enlarge ${photo.name.toLowerCase()} photograph`}><Expand size={16}/></button></div></div><div className="wm-perspective-copy" key={photo.key}><photo.icon size={25} strokeWidth={1.3}/><p className="eyebrow">{photo.eyebrow}</p><h3>{photo.heading}</h3><p>{photo.text}</p><small>{photo.detail}</small><button className="text-button" onClick={perspective===2?onLearn:onStart}>{perspective===2?'Understand the approach':'Add your details'}<ArrowRight size={16}/></button><div className="wm-photo-pagination"><button aria-label="Previous perspective" onClick={()=>setPerspective((perspective+2)%3)}><ChevronLeft size={18}/></button><span>0{perspective+1}<i>/</i>03</span><button aria-label="Next perspective" onClick={()=>setPerspective((perspective+1)%3)}><ChevronRight size={18}/></button></div></div></div>
     </section>
 
+    {demos}
     <section className={`demo-guide wm-demo wm-reveal ${guide?'expanded':''}`}><button className="guide-toggle" aria-expanded={guide} aria-controls="demo-guide-content" onClick={()=>setGuide(!guide)}><span className="guide-icon"><Sparkles size={20}/></span><span><strong>Take a look around first.</strong><small>Interactive Demo Guide · No personal details needed</small></span><span className="guide-action">Explore the guide<ChevronDown size={17}/></span></button>{guide&&<div id="demo-guide-content" className="guide-content"><div><span>01</span><h3>Meet the sample</h3><p>A synthetic profile with seven recorded inputs. Nothing here belongs to you.</p></div><div><span>02</span><h3>Open the report</h3><p>Explore recorded research outputs. Missing results stay unavailable.</p></div><div><span>03</span><h3>Try the controls</h3><p>Review values, explore inputs, and save a printable report.</p></div><button className="btn btn-primary" onClick={onSample}>Open sample<ArrowRight size={16}/></button></div>}</section>
     <section className="context-strip wm-context"><div className="context-line-art" aria-hidden="true"><Heart size={38} strokeWidth={1.1}/></div><div><h3>Your health is more than a number.</h3><p>These research tools help you explore information. They don’t diagnose a condition or replace a conversation with your clinician.</p></div><button className="text-button" onClick={onLearn}>Understand the approach<ArrowRight size={16}/></button></section>
     <dialog ref={photoDialog} className="wm-lightbox" aria-label={`${photo.name} photograph`} onCancel={e=>{e.preventDefault();closePhoto();}} onClick={e=>{if(e.target===e.currentTarget)closePhoto();}}><button className="wm-lightbox-close" aria-label="Close photograph" onClick={closePhoto}><X size={22}/></button><figure><img src={photo.image} alt={photo.alt}/><figcaption>{photo.name}<span>Everyday perspectives · CardioScope</span></figcaption></figure></dialog>

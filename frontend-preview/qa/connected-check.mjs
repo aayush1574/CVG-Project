@@ -7,6 +7,14 @@ const errors=[];page.on('pageerror',e=>errors.push(e.message));
 const url=process.env.CVG_UI_URL||'http://127.0.0.1:5175';
 try{
  await page.goto(url);
+ expect(await page.locator('.demo-guide').evaluate(el=>el.previousElementSibling?.classList.contains('live-research-demos'))).toBeTruthy();
+ await expect(page.locator('.welcome-hero')).toBeVisible();
+ for(const width of [320,390,1440]){
+   await page.setViewportSize({width,height:900});
+   await page.locator('.live-research-demos').scrollIntoViewIfNeeded();
+   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBeTruthy();
+ }
+ await page.locator('.live-research-demos').screenshot({path:'qa/demo-placement.png'});
  await page.getByRole('button',{name:/Case 3:/}).click();
  await expect(page.getByRole('heading',{name:'Your research report.'})).toBeVisible({timeout:120000});
  await expect(page.getByText('Atrial fibrillation rhythm model',{exact:true})).toBeVisible();
