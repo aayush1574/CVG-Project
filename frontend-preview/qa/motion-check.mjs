@@ -8,7 +8,8 @@ const errors = [], checks = [], failures = [], mediaRequests = [], unexpectedReq
 function trackRequests(request) {
   const url = new URL(request.url());
   if (!['http:', 'https:'].includes(url.protocol)) return;
-  if (url.origin !== 'http://127.0.0.1:5174' || /\/(?:api|predict|analyze|analyse)(?:\/|$)/i.test(url.pathname) || request.method() !== 'GET') {
+    if(url.origin==='http://127.0.0.1:5175' && url.pathname==='/api/health' && request.method()==='GET')return;
+  if (url.origin !== 'http://127.0.0.1:5175' || /\/(?:api|predict|analyze|analyse)(?:\/|$)/i.test(url.pathname) || request.method() !== 'GET') {
     unexpectedRequests.push({ url: request.url(), method: request.method() });
   }
 }
@@ -24,7 +25,7 @@ const visualTransform = locator => locator.evaluate(element => {
 const scrollTo = y => page.evaluate(top => window.scrollTo({ top, behavior: 'instant' }), y);
 
 try {
-  await page.goto('http://127.0.0.1:5174/');
+  await page.goto('http://127.0.0.1:5175/');
   await page.locator('.wm-welcome').waitFor();
   const heroVideo = page.locator('.wm-hero-media video');
   await check('Kinetic heading preserves a complete accessible name', async () => {
@@ -183,7 +184,7 @@ try {
   const reducedRequests = [];
   reduced.on('request', request => { if (request.url().includes('.mp4')) reducedRequests.push(request.url()); });
   await check('Reduced motion never loads MP4 media and disables continuous motion', async () => {
-    await reduced.goto('http://127.0.0.1:5174/');
+    await reduced.goto('http://127.0.0.1:5175/');
     await reduced.locator('.wm-perspectives').scrollIntoViewIfNeeded();
     await expect(reduced.getByRole('button', { name: 'Reduced motion enabled', exact: true })).toBeDisabled();
     await expect(reduced.locator('.wm-welcome')).toHaveAttribute('data-motion', 'off');

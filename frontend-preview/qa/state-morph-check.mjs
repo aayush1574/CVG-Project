@@ -5,11 +5,12 @@ const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: 'no-preference' });
 const page = await context.newPage();
 const checks = [], failures = [], errors = [], unexpectedRequests = [];
-const origin = 'http://127.0.0.1:5174';
+const origin = 'http://127.0.0.1:5175';
 function trackContext(ctx) {
   ctx.on('request', request => {
     const url = new URL(request.url());
     if (!['http:', 'https:'].includes(url.protocol)) return;
+    if(url.origin==='http://127.0.0.1:5175' && url.pathname==='/api/health' && request.method()==='GET')return;
     if (url.origin !== origin || request.method() !== 'GET' || /\/(?:api|predict|analyze|analyse)(?:\/|$)/i.test(url.pathname)) {
       unexpectedRequests.push({ url: request.url(), method: request.method() });
     }

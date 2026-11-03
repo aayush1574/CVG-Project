@@ -1,3 +1,4 @@
+import {api} from './api';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Check, ChevronRight, CircleAlert, FileText, FolderUp, HeartPulse, Info, LoaderCircle, PencilLine, ShieldCheck, Trash2, Upload } from 'lucide-react';
 import { fields, fieldError, groups, parseClinical, parseWaveform, standardLeads, type Source, type Values } from './data';
@@ -5,6 +6,8 @@ import './inputs.css';
 
 type Files = { report: File | null; ecg: File | null; header: File | null };
 type Props = {
+  extraction:Extraction[];
+  onExtraction:(value:Extraction[])=>void;
   values: Values;
   sources: Record<string, Source>;
   onChange: (key: string, value: string, source?: Source) => void;
@@ -17,6 +20,7 @@ type Props = {
   onReview: () => void;
   isSample: boolean;
 };
+export type Extraction={field?:string;source_text?:string;original_unit?:string;canonical_unit?:string;unit_status?:string;conversion_factor?:number;reference_interval?:{low:number;high:number;unit?:string}};
 
 const ext = (file: File | null) => file?.name.split('.').pop()?.toLowerCase() || '';
 const stem = (file: File | null) => file?.name.replace(/\.[^.]+$/, '') || '';
@@ -26,11 +30,12 @@ const fileSize = (file: File) => file.size < 1_000_000 ? `${Math.max(1, Math.rou
 // Keep read failures with the local File object when navigating between pages.
 const fileReadErrors = new WeakMap<File, string>();
 
-export default function InputWorkspace({ values, sources, onChange, files, onFiles, waveform, onWaveform, sampleRate, onSampleRate, onReview, isSample }: Props) {
+export default function InputWorkspace({ extraction, onExtraction, values, sources, onChange, files, onFiles, waveform, onWaveform, sampleRate, onSampleRate, onReview, isSample }: Props) {
   const [tab, setTab] = useState<'upload' | 'manual'>('upload');
   const [errors, setErrors] = useState({ report: files.report ? fileReadErrors.get(files.report) || '' : '', ecg: files.ecg ? fileReadErrors.get(files.ecg) || '' : '', header: '' });
   const [reading, setReading] = useState({ report: false, ecg: false });
   const [notice, setNotice] = useState('');
+  const evidence=extraction;const setEvidence=onExtraction;
   const [showErrors, setShowErrors] = useState(false);
   const [dragging, setDragging] = useState<'report' | 'ecg' | null>(null);
   const filesRef = useRef(files);
@@ -47,7 +52,7 @@ export default function InputWorkspace({ values, sources, onChange, files, onFil
   const paired = ['dat', 'hea'].includes(ecgExtension);
   const usesRate = ['csv', 'npy'].includes(ecgExtension);
   const pairError = paired && (!files.header ? `Add the matching .${ecgExtension === 'dat' ? 'hea' : 'dat'} companion file.` : stem(files.ecg) !== stem(files.header) ? 'Both WFDB filenames must match before the extension.' : ext(files.header) !== (ecgExtension === 'dat' ? 'hea' : 'dat') ? `The companion must be a .${ecgExtension === 'dat' ? 'hea' : 'dat'} file.` : '') || '';
-  const rateError = usesRate && (!Number.isInteger(sampleRate) || sampleRate < 100) ? 'Enter a whole-number sampling rate of at least 100 Hz.' : '';
+  const rateError = usesRate && (!Number.isInteger(sampleRate) || sampleRate < 100 || sampleRate > 2000) ? 'Enter a whole-number sampling rate of 100–2000 Hz.' : '';
 
   function updateFiles(update: Partial<Files>) {
     const next = { ...filesRef.current, ...update };
@@ -67,21 +72,18 @@ export default function InputWorkspace({ values, sources, onChange, files, onFil
     if (issue) { setErrors(e => ({ ...e, report: issue })); return; }
     const operation = ++operations.current.report;
     setErrors(e => ({ ...e, report: '' }));
-    setNotice('');
+    setNotice('');setEvidence([]);
     updateFiles({ report: file });
-    if (!['csv', 'json'].includes(ext(file))) {
-      setReading(r => ({ ...r, report: false }));
-      setNotice('File selected. PDF and image extraction is unavailable in this standalone preview. Enter its values manually.');
-      return;
-    }
     setReading(r => ({ ...r, report: true }));
     fileReadErrors.set(file, 'Report reading was interrupted. Replace the file to try again.');
     try {
-      const parsed = parseClinical(await file.text(), ext(file));
+      const local=['csv','json'].includes(ext(file))?parseClinical(await file.text(),ext(file)):null;
+      const form=new FormData();form.append('report',file);const response=local?{values:local,provenance:{fields:Object.keys(local).map(field=>({field,source_text:`${field}: ${local[field]}`,canonical_unit:'Confirm canonical input units'}))}}:await api<{values:Record<string,string|number>;provenance?:{fields:typeof evidence}}>('/api/parse-report',{method:'POST',body:form});const parsed=Object.fromEntries(Object.entries(response.values).map(([k,v])=>[k,String(v)]));
       if (operations.current.report !== operation) return;
+      setEvidence(response.provenance?.fields??[]);
       fileReadErrors.delete(file);
       Object.entries(parsed).forEach(([key, value]) => onChange(key, value, 'Extracted'));
-      setNotice(`${Object.keys(parsed).length} values read locally from ${file.name}. Review them in Enter details before continuing.`);
+      setNotice(`${Object.keys(parsed).length} values extracted ${local?'locally':'by the API'} from ${file.name}. Review them in Enter details before continuing.`);
     } catch (error) {
       if (operations.current.report === operation) {
         const message = error instanceof Error ? error.message : 'Could not read this report. Try another file or enter values manually.';
@@ -128,7 +130,7 @@ export default function InputWorkspace({ values, sources, onChange, files, onFil
   }
 
   function removeFile(kind: 'report' | 'ecg') {
-    operations.current[kind]++;
+    operations.current[kind]++;if(kind==='report')setEvidence([]);
     setReading(r => ({ ...r, [kind]: false }));
     setErrors(e => ({ ...e, [kind]: '', ...(kind === 'ecg' ? { header: '' } : {}) }));
     updateFiles(kind === 'ecg' ? { ecg: null, header: null } : { report: null });
@@ -156,7 +158,8 @@ export default function InputWorkspace({ values, sources, onChange, files, onFil
     <div className="inp-topline"><div className="inp-tabs" role="tablist" aria-label="Add health information">{(['upload', 'manual'] as const).map((key, index) => <button key={key} ref={el => { tabs.current[index] = el; }} role="tab" id={`inp-tab-${key}`} aria-selected={tab === key} aria-controls={`inp-panel-${key}`} tabIndex={tab === key ? 0 : -1} onClick={() => setTab(key)} onKeyDown={event => { if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) { event.preventDefault(); const next = event.key === 'Home' ? 0 : event.key === 'End' ? 1 : 1 - index; setTab(next ? 'manual' : 'upload'); tabs.current[next]?.focus(); } }}><span>{key === 'upload' ? <Upload size={17} /> : <PencilLine size={17} />}</span>{key === 'upload' ? 'Upload reports' : 'Enter details'}</button>)}</div><span className="inp-entry-count"><span>{filledCount}</span> of {fields.length} fields provided</span></div>
 
     {notice && <div className="inp-notice" role="status"><Info size={18} /><p>{notice}</p></div>}
-    {isSample && <p className="inp-sample-note"><Info size={15} /> Sample profile · Edits are preserved as a separate preview and do not recalculate recorded sample scores.</p>}
+    {evidence.length>0&&<details><summary>Extraction evidence — review source text and units</summary>{evidence.map((item,i)=><p key={i}>{item.field}: {item.source_text??'Source text unavailable'} · {item.original_unit??'Units unverified'} → {item.canonical_unit??'Review units'}</p>)}<p>Measurement dates and extraction accuracy require review.</p></details>}
+    {isSample && <p className="inp-sample-note"><Info size={15} /> Sample profile · Generate a fresh assessment after editing inputs.</p>}
 
     {tab === 'upload' ? <div role="tabpanel" id="inp-panel-upload" aria-labelledby="inp-tab-upload" className="inp-upload-layout">
       <div className="inp-uploads">
@@ -167,9 +170,9 @@ export default function InputWorkspace({ values, sources, onChange, files, onFil
             {files.report ? fileRow(files.report, 'report') : <><FolderUp size={31} strokeWidth={1.4} /><h3>Drop your report here</h3><p>PDF, image, CSV or JSON · Up to 10 MB</p></>}
             <button type="button" className="btn btn-secondary inp-browse" onClick={() => reportInput.current?.click()}>{files.report ? 'Replace report' : 'Browse files'}<ArrowRight size={16} /></button>
           </div>
-          {reading.report && <p className="inp-file-status" role="status"><LoaderCircle size={16} className="inp-spinner" /> Reading report in your browser…</p>}
+          {reading.report && <p className="inp-file-status" role="status"><LoaderCircle size={16} className="inp-spinner" /> Extracting report…</p>}
           {errors.report && <div className="inp-upload-error" role="alert"><p className="inp-error"><CircleAlert size={16} />{errors.report}</p><button type="button" onClick={() => removeFile('report')}>{files.report ? 'Remove report' : 'Dismiss'}</button></div>}
-          <p className="inp-format-note">CSV and JSON values can be read locally. PDF and image files can be selected; <button type="button" onClick={() => setTab('manual')}>enter their values manually <ChevronRight size={13} /></button>.</p>
+          <p className="inp-format-note">Reports are extracted by the API. Always review values and units; <button type="button" onClick={() => setTab('manual')}>enter their values manually <ChevronRight size={13} /></button>.</p>
         </section>
 
         <section className="inp-upload-section" aria-labelledby="inp-ecg-title">
@@ -184,11 +187,11 @@ export default function InputWorkspace({ values, sources, onChange, files, onFil
           {waveform && files.ecg && <p className="inp-file-status inp-success" role="status"><Check size={16} /> {Object.keys(waveform).length}-lead waveform loaded · {Object.values(waveform)[0].length.toLocaleString()} samples per lead</p>}
           {paired && <div className="inp-companion"><label htmlFor="inp-companion">WFDB companion file</label><input ref={headerInput} id="inp-companion" className="inp-file-input" type="file" tabIndex={-1} accept={ecgExtension === 'dat' ? '.hea' : '.dat'} onChange={event => { if (event.target.files?.[0]) selectHeader(event.target.files[0]); event.target.value = ''; }} /><div className="inp-companion-controls"><button type="button" className="btn btn-secondary" onClick={() => headerInput.current?.click()}>{files.header ? 'Replace companion' : `Choose .${ecgExtension === 'dat' ? 'hea' : 'dat'} file`}</button>{files.header && <><span title={files.header.name}>{files.header.name}</span><button className="inp-icon-button" type="button" aria-label="Remove companion file" onClick={() => { updateFiles({ header: null }); setErrors(e => ({ ...e, header: '' })); }}><Trash2 size={16} /></button></>}</div>{(pairError || errors.header) && <p className="inp-error" role={showErrors || errors.header ? 'alert' : undefined}><CircleAlert size={16} />{errors.header || pairError}</p>}{!pairError && !errors.header && <p className="inp-file-status inp-success"><Check size={16} /> Matching file pair selected.</p>}</div>}
           {usesRate && <div className="inp-rate"><div><label htmlFor="inp-sample-rate">Sampling rate</label><p>Use the recording’s original rate.</p></div><div className="inp-number-wrap"><input id="inp-sample-rate" type="number" min="100" step="1" value={Number.isNaN(sampleRate) ? '' : sampleRate} aria-invalid={!!rateError} aria-describedby={rateError ? 'inp-rate-error' : undefined} onChange={event => onSampleRate(event.target.value === '' ? NaN : Number(event.target.value))} /><span>Hz</span></div>{rateError && <p className="inp-error" id="inp-rate-error">{rateError}</p>}</div>}
-          {files.ecg && ecgExtension !== 'csv' && <p className="inp-format-note">{paired ? 'WFDB decoding' : ecgExtension === 'npy' ? 'NPY decoding' : 'Scanned ECG extraction'} is unavailable in this preview. The file stays local; no waveform or model scores are invented.</p>}
-          <details className="inp-file-help"><summary>Supported lead modes <Info size={14} /></summary><div><p><strong>12 leads:</strong> {standardLeads.join(', ')}.</p><p><strong>6 leads:</strong> I, II, III, aVR, aVL, aVF. <strong>1 lead:</strong> I.</p><p>CSV files need named lead columns and numeric samples. NPY arrays use samples × leads. Partial leads and scanned ECGs are experimental research inputs. CSV previews show the supplied signal; this frontend does not interpret it.</p></div></details>
+          {files.ecg && ecgExtension !== 'csv' && <p className="inp-format-note">{paired ? 'WFDB decoding' : ecgExtension === 'npy' ? 'NPY decoding' : 'Scanned ECG extraction'} runs on the backend when you generate the assessment.</p>}
+          <details className="inp-file-help"><summary>Supported lead modes <Info size={14} /></summary><div><p><strong>12 leads:</strong> {standardLeads.join(', ')}.</p><p><strong>6 leads:</strong> I, II, III, aVR, aVL, aVF. <strong>1 lead:</strong> I.</p><p>CSV files need named lead columns and numeric samples. NPY arrays use samples × leads. Partial leads and scanned ECGs are experimental research inputs. CSV previews show the supplied signal; the API evaluates supported recordings.</p></div></details>
         </section>
       </div>
-      <aside className="inp-aside"><div className="inp-aside-mark"><ShieldCheck size={25} strokeWidth={1.5} /></div><h3>Your details.<br />Your pace.</h3><p>Add only what you have. You can complete this journey with health details alone.</p><div className="inp-aside-divider" /><ol><li><span>1</span><div><strong>Add your information</strong><p>Upload a file or enter values.</p></div></li><li><span>2</span><div><strong>Check the details</strong><p>Review and correct every input.</p></div></li><li><span>3</span><div><strong>Explore the report</strong><p>See available information and limitations.</p></div></li></ol><div className="inp-local-note"><ShieldCheck size={16} /><p>Files and entries stay in this tab. Nothing is sent to a server.</p></div></aside>
+      <aside className="inp-aside"><div className="inp-aside-mark"><ShieldCheck size={25} strokeWidth={1.5} /></div><h3>Your details.<br />Your pace.</h3><p>Add only what you have. You can complete this journey with health details alone.</p><div className="inp-aside-divider" /><ol><li><span>1</span><div><strong>Add your information</strong><p>Upload a file or enter values.</p></div></li><li><span>2</span><div><strong>Check the details</strong><p>Review and correct every input.</p></div></li><li><span>3</span><div><strong>Explore the report</strong><p>See available information and limitations.</p></div></li></ol><div className="inp-local-note"><ShieldCheck size={16} /><p>Reports are uploaded for extraction. Reviewed values and ECGs are sent for assessment.</p></div></aside>
     </div> : <div role="tabpanel" id="inp-panel-manual" aria-labelledby="inp-tab-manual" className="inp-manual-panel">
       <div className="inp-manual-intro"><div><h2>Your health details</h2><p>All fields are optional. Missing information stays “Not provided.”</p></div><a className="inp-text-link" href="#inp-group-2">Jump to laboratory results <ArrowRight size={15} /></a></div>
       {groups.map((group, index) => <section key={group.name} id={`inp-group-${index}`} className="inp-field-section"><div className="inp-group-heading"><span className="inp-section-number">0{index + 1}</span><div><h3>{group.name}</h3><p>{group.description}</p></div></div><div className="inp-fields">{group.fields.map(field => {
@@ -204,5 +207,3 @@ export default function InputWorkspace({ values, sources, onChange, files, onFil
     <div className="inp-footer"><p><ShieldCheck size={16} /><span>Your progress is kept as you move between steps.</span></p><button type="button" className="btn btn-primary" disabled={reading.report || reading.ecg} onClick={review}>Review inputs <ArrowRight size={17} /></button></div>
   </div>;
 }
-
-

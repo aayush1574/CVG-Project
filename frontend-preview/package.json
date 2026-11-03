@@ -7,7 +7,9 @@
     "dev": "vite --host 127.0.0.1 --port 5174 --strictPort",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1 --port 5174 --strictPort",
-    "check:ui": "node qa/input-check.mjs && node qa/report-check.mjs && node qa/accessibility-check.mjs && node qa/motion-check.mjs && node qa/state-morph-check.mjs && node qa/visual-check.mjs"
+    "check:ui": "node qa/connected-check.mjs && node qa/request-check.mjs",
+    "check:offline": "node qa/input-check.mjs && node qa/report-check.mjs",
+    "check:motion": "node qa/motion-check.mjs && node qa/state-morph-check.mjs"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.3.0",

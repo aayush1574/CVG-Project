@@ -1,0 +1,33 @@
+import validation from './modelValidation.json';
+import {conditionNotes,ecgNotes,percent,type ReportResult} from './reportFormat';
+
+export default function DiagnosticPanels({result}:{result:ReportResult|null}){
+  const conditions=result?.clinical_icd_conditions;
+  const ecg=result?.ecg_superclasses;
+  return <div className="space-y-5">
+    <section className="report-card" aria-labelledby="conditions-title">
+      <div className="flex flex-wrap items-center justify-between gap-2"><h2 id="conditions-title" className="text-xl font-semibold">Condition model scores</h2><span className="report-kicker">{result?.diagnostic_modality==='ecg_clinical'?'ECG and clinical model':'Clinical history and laboratory model'}</span></div>
+      <p className="report-help">Each percentage is a model estimate for a diagnosis group, not a diagnosis or a personal chance of developing it. Scores can overlap and do not add to 100%.</p>
+      {result?.diagnostic_modality==='clinical_only'&&<p className="mt-4 rounded-xl bg-amber-50 p-3 text-sm text-amber-900">Clinical-only condition assessment: these estimates use available health details and labs. {result.lead_mode?.mode==='1-lead'||result.lead_mode?.mode==='6-lead'?'The partial-lead waveform is assessed only in the separate ECG-pattern panel.':'Waveform fusion is unavailable for this input quality or lead type; separate experimental waveform scores may appear below.'} This mode has lower held-out model performance.</p>}
+      {conditions?<div className="mt-5 space-y-3">{Object.entries(conditions).map(([code,item])=><article className="rounded-2xl border border-slate-200 p-4" key={code}>
+        <div className="flex items-start justify-between gap-3"><div><h3 className="font-semibold text-ink">{item.name} <span className="font-normal text-slate-500">({code})</span></h3><p className="mt-1 text-sm text-slate-600">{conditionNotes[code]}</p></div><strong className="shrink-0 text-xl text-teal">{percent(item.probability)}</strong></div>
+        <div className="mt-3 h-2 rounded-full bg-slate-100" role="img" aria-label={`${item.name}: ${percent(item.probability)}`}><div className="h-2 rounded-full bg-teal" style={{width:`${Math.max(1,Math.min(100,item.probability*100))}%`}}/></div>
+        <p className="mt-2 text-xs text-slate-600"><span className={item.flag?'font-semibold text-amber-800':'font-semibold text-slate-700'}>{item.flag==null?'Inconclusive: insufficient reliability':item.flag?'Above research review marker':'Below research review marker'}</span> · Marker {percent(item.threshold)}. The marker supports research comparison only.</p><p className="mt-2 text-xs text-amber-900">{item.reliability_note}</p>
+      </article>)}</div>:<p className="mt-5 text-sm text-slate-500">Run an assessment to see condition scores and explanations.</p>}
+    </section>
+    {ecg&&<section className="report-card" aria-labelledby="ecg-title"><div className="flex flex-wrap items-center justify-between gap-2"><h2 id="ecg-title" className="text-xl font-semibold">ECG waveform patterns</h2><span className="report-kicker">Separate ECG model</span></div>
+      {result?.lead_mode&&<div className="mt-3 rounded-xl bg-teal/10 px-3 py-2 text-sm text-teal"><strong>{result.lead_mode.mode==='12-lead'?'12-Lead Clinical':result.lead_mode.mode==='6-lead'?'6-Lead Limb':'1-Lead Wearable'}</strong> · {result.lead_mode.active_leads.join(', ')}{result.lead_mode.mode!=='12-lead'&&<span className="block text-xs">Experimental partial-lead adapter. Held-out macro AUROC {result.lead_mode_confidence?.held_out_macro_auroc?.toFixed(3)??'unavailable'} on {result.lead_mode_confidence?.held_out_records??'unknown'} ECGs; this is not individual-result confidence.</span>}</div>}
+      <p className="report-help">Pattern scores compare the uploaded waveform with five research labels. {result?.ecg_probability_calibration?'Standard digital 12-lead scores use validation-fitted calibration.':'These experimental scores are uncalibrated.'} Scores may overlap and cannot confirm or exclude a condition.</p>
+      <div className="mt-4 space-y-3">{Object.entries(ecg).map(([code,item])=><div className="rounded-xl bg-paper p-3" key={code}><div className="flex justify-between gap-3"><strong className="text-sm">{item.name} <span className="font-normal text-slate-500">({code})</span></strong><strong className="text-sm text-teal">{percent(item.probability)}</strong></div><p className="mt-1 text-xs text-slate-600">{ecgNotes[code]}</p>{item.threshold!=null&&result?.ecg_probability_calibration&&<p className="mt-1 text-xs text-slate-600">Mapped review marker: {percent(item.threshold)}. A score below the marker cannot exclude this pattern.</p>}</div>)}</div>
+    </section>}
+    <details className="report-card print:hidden"><summary className="cursor-pointer font-semibold">Model validation and methods</summary><div className="mt-3 space-y-2 text-sm text-slate-600">
+      <p>PTB-XL: {validation.ptbxl.total_records.toLocaleString()} ECGs cached, {validation.ptbxl.failed_records} failed. Official fold 10 test macro AUROC {validation.ptbxl.test_macro_auroc.toFixed(3)} and macro F1 {validation.ptbxl.test_macro_f1.toFixed(3)}.</p>
+      <p>MIMIC adapter: 24,000 aligned records. Cached-test macro AUROC: ECG plus clinical {validation.mimic.ecg_clinical.test_macro_auroc.toFixed(3)}; clinical-only {validation.mimic.clinical_only.test_macro_auroc.toFixed(3)}. Macro F1 at 0.5: {validation.mimic.ecg_clinical.test_macro_f1.toFixed(3)} and {validation.mimic.clinical_only.test_macro_f1.toFixed(3)}.</p>
+      <p>Framingham teaching cohort: {validation.v2.longitudinal_chd.source_rows.toLocaleString()} rows, {validation.v2.longitudinal_chd.test_rows} held-out; 10-year CHD AUROC {validation.v2.longitudinal_chd.test_auroc.toFixed(3)}, Brier {validation.v2.longitudinal_chd.test_brier.toFixed(3)}, ECE {validation.v2.longitudinal_chd.test_ece.toFixed(3)}. This is a different outcome from PREVENT total CVD.</p>
+      <p>Partial-lead adapter: lead I AUROC {validation.v2.lead_adapter['1-lead'].test_auroc_adapted.toFixed(3)} and six-lead AUROC {validation.v2.lead_adapter['6-lead'].test_auroc_adapted.toFixed(3)}, each on {validation.v2.lead_adapter['1-lead'].test_rows} held-out ECGs. Small-sample experimental results.</p>
+      <p>The GBDT clinical stack and bottleneck fine-tuning candidates did not pass the promotion gate; the earlier serving heads remain in use.</p>
+      <p>Digital 12-lead calibration: held-out mean ECE 0.1604 → 0.0143 and Brier 0.1103 → 0.0789. Mapped review thresholds preserve F1 0.7264; F1 at a fixed calibrated 0.5 threshold is 0.6973.</p>
+      <p>These are internal research metrics and do not establish clinical validity.</p>
+    </div></details>
+  </div>;
+}

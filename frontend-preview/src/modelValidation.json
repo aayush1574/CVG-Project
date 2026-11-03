@@ -1,0 +1,43 @@
+{
+  "ptbxl": {
+    "total_records": 21837,
+    "failed_records": 0,
+    "labeled_records": 20413,
+    "test_rows": 2055,
+    "test_macro_auroc": 0.9219908702253845,
+    "test_macro_f1": 0.7263970670799647
+  },
+  "mimic": {
+    "ecg_clinical": {
+      "test_macro_auroc": 0.8585231954295207,
+      "test_macro_f1": 0.3956071426242379
+    },
+    "clinical_only": {
+      "test_macro_auroc": 0.7131877320723667,
+      "test_macro_f1": 0.1336059891144637
+    }
+  },
+  "v2": {
+    "longitudinal_chd": {
+      "source_rows": 4240,
+      "test_rows": 848,
+      "test_auroc": 0.6895882524177637,
+      "test_brier": 0.1218751873499207,
+      "test_ece": 0.018561236886267072
+    },
+    "lead_adapter": {
+      "1-lead": {
+        "test_auroc_raw": 0.7731494810625246,
+        "test_auroc_adapted": 0.8032892613110004,
+        "test_rows": 50
+      },
+      "6-lead": {
+        "test_auroc_raw": 0.8611072788029311,
+        "test_auroc_adapted": 0.882123956971783,
+        "test_rows": 50
+      }
+    },
+    "clinical_stack_promoted": false,
+    "bottleneck_promoted": false
+  }
+}

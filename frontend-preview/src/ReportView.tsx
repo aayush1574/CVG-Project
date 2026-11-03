@@ -49,7 +49,7 @@ function ReportMetric({ title, value, unit, note, sample, primary = false }: { t
   </div>;
 }
 
-function WaveformExplorer({ waveform, sampleRate }: Pick<ReportProps, 'waveform' | 'sampleRate'>) {
+export function WaveformExplorer({ waveform, sampleRate, processed=false }: Pick<ReportProps, 'waveform' | 'sampleRate'> & {processed?:boolean}) {
   const leads = useMemo(() => Object.entries(waveform || {}).filter(([, points]) => Array.isArray(points) && points.length > 1 && points.every(Number.isFinite)).map(([lead]) => lead), [waveform]);
   const [selectedLead, setSelectedLead] = useState('');
   const [zoom, setZoom] = useState(1);
@@ -67,13 +67,13 @@ function WaveformExplorer({ waveform, sampleRate }: Pick<ReportProps, 'waveform'
 
   return <section className="rpt-section">
     <div className="rpt-section-heading"><div><p className="eyebrow">SIGNAL DETAIL</p><h2>ECG explorer</h2><p>Inspect the supplied waveform, one lead at a time.</p></div><Waves size={26} strokeWidth={1.5} /></div>
-    {!leads.length ? <div className="rpt-empty"><Waves size={36} strokeWidth={1.2}/><h3>No waveform to display</h3><p>Add a supported numeric CSV waveform in the input step to explore its leads. Selecting an image or a WFDB file does not produce a trace in this preview.</p><span className="rpt-text-label">No patient recording has been inferred.</span></div> : <>
+    {!leads.length ? <div className="rpt-empty"><Waves size={36} strokeWidth={1.2}/><h3>No waveform to display</h3><p>Add a supported recording and generate an assessment to view the available waveform.</p><span className="rpt-text-label">No patient recording has been inferred.</span></div> : <>
       <div className="rpt-wave-tools"><label>Lead<select aria-label="Lead" value={lead} onChange={e => setSelectedLead(e.target.value)}>{leads.map(item => <option key={item} value={item}>{item}</option>)}</select></label><label>Zoom<select aria-label="Zoom" value={zoom} onChange={e => { setZoom(Number(e.target.value)); setOffset(0); }}><option value={1}>1× · Full signal</option><option value={2}>2×</option><option value={4}>4×</option></select></label><span className="rpt-wave-meta">{points.length.toLocaleString()} samples · {safeRate} Hz</span></div>
-      <div className="rpt-wave-chart"><span className="rpt-wave-lead">{lead}</span><svg viewBox="0 0 1000 260" preserveAspectRatio="none" role="img" aria-label={`Uploaded ECG lead ${lead}, from ${marks[0]} to ${marks[4]} seconds. Amplitude is shown in the original input units.`}><defs><pattern id={gridId} width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#dbe6df" strokeWidth="0.6"/></pattern></defs><rect width="1000" height="260" fill={`url(#${gridId})`}/><line x1="0" x2="1000" y1="130" y2="130" stroke="#b9cfc3" strokeWidth="1"/><polyline fill="none" stroke="var(--teal, #137d70)" strokeWidth="1.6" vectorEffect="non-scaling-stroke" points={coordinates}/></svg><div className="rpt-wave-axis">{marks.map((mark, index) => <span key={index}>{mark}s</span>)}</div></div>
+      <div className="rpt-wave-chart"><span className="rpt-wave-lead">{lead}</span><svg viewBox="0 0 1000 260" preserveAspectRatio="none" role="img" aria-label={`Uploaded ECG lead ${lead}, from ${marks[0]} to ${marks[4]} seconds. Amplitude is scaled for display; see the unit description below.`}><defs><pattern id={gridId} width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#dbe6df" strokeWidth="0.6"/></pattern></defs><rect width="1000" height="260" fill={`url(#${gridId})`}/><line x1="0" x2="1000" y1="130" y2="130" stroke="#b9cfc3" strokeWidth="1"/><polyline fill="none" stroke="var(--teal, #137d70)" strokeWidth="1.6" vectorEffect="non-scaling-stroke" points={coordinates}/></svg><div className="rpt-wave-axis">{marks.map((mark, index) => <span key={index}>{mark}s</span>)}</div></div>
       {zoom > 1 && <label className="rpt-wave-pan">Position in recording<input type="range" min={0} max={Math.max(0, points.length - visibleCount)} value={start} step={1} onChange={e => setOffset(Number(e.target.value))}/></label>}
-      <p className="rpt-caption">Time uses the specified sampling rate. Amplitude uses the original input units; the display is normalized to fit. This viewer does not interpret the recording.</p>
+      <p className="rpt-caption">Time uses the specified sampling rate. Amplitude is scaled to fit; processed signals use standardized units. This viewer does not interpret the recording.</p>
     </>}
-    <div className="rpt-rule-note"><Info size={17}/><p><strong>ECG waveform-pattern scores: Unavailable.</strong> The waveform is separate from the clinical condition model. ECG-plus-clinical fusion is withheld. No analysis engine is connected.</p></div>
+    <p>{processed?'Processed signal overview: standardized amplitude, downsampled to 20 Hz; not a diagnostic tracing.':'Raw uploaded samples; declared millivolt units.'}</p>
   </section>;
 }
 
@@ -159,4 +159,3 @@ export default function ReportView({ values, isSample, waveform, sampleRate, onE
     <footer className="rpt-footer">Research & Educational Simulation Only. {isSample ? 'Recorded synthetic sample.' : 'No personal predictions have been generated.'}</footer>
   </div>;
 }
-

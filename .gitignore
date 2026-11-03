@@ -17,3 +17,6 @@ frontend-preview/qa/screenshots/
 frontend-preview/qa/*.pdf
 frontend-preview/qa/*results.json
 mimic_preprocessing_discovery.json
+
+.wrangler/
+frontend-preview/qa/*.png
