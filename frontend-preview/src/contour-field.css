@@ -1,0 +1,35 @@
+.wm-contour-field {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: #0e7568;
+  opacity: .14;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+}
+
+.wm-contour-lines {
+  stroke: currentColor;
+  stroke-width: 1;
+  stroke-linecap: round;
+  transform: none;
+  transition: stroke-width 150ms ease;
+}
+
+.wm-contour-field[data-interaction-phase='tracking'] .wm-contour-lines,
+.wm-contour-field[data-interaction-phase='morphing'] .wm-contour-lines { stroke-width: 1.2; }
+.wm-contour-field[data-interaction-phase='pressed'] .wm-contour-lines { stroke-width: 1.55; }
+
+.wm-contour-field.is-responsive .wm-contour-lines {
+  transform: translate(
+    calc(var(--wm-pointer-x, 0) * 1px),
+    calc((var(--wm-art-shift, 0) + var(--wm-pointer-y, 0)) * 1px)
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wm-contour-field.is-responsive .wm-contour-lines {
+    transform: none;
+  }
+}

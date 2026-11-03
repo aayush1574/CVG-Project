@@ -1,0 +1,116 @@
+/* Motion is opt-in through the shared preference; focus and target sizes are not. */
+.wm-welcome .wm-photo-pagination > button,
+.wm-welcome .wm-image-corner > button,
+.wm-welcome .wm-lightbox-close {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  flex-shrink: 0;
+}
+
+:is(.nav-item, .step, .segmented button, .inp-tabs button, .rpt-tabs button,
+  .wm-chapter-tabs button, .wm-perspective-tabs button, .wm-photo-pagination button,
+  .wm-image-corner button, .wm-lightbox-close, .guide-toggle):focus-visible {
+  outline: 2px solid var(--teal, #137d70);
+  outline-offset: 4px;
+}
+
+.inp-dropzone:focus-within {
+  border-color: var(--teal, #137d70);
+}
+
+html[data-welcome-motion='on'] :is(.btn, .icon-button, .inp-icon-button,
+  .nav-item, .step, .segmented button, .inp-tabs button, .rpt-tabs button,
+  .wm-chapter-tabs button, .wm-perspective-tabs button, .wm-photo-pagination button,
+  .wm-image-corner button, .wm-lightbox-close, .wm-motion-control) {
+  transition: background-color 140ms ease, border-color 140ms ease,
+    color 140ms ease, box-shadow 140ms ease, translate 140ms ease,
+    transform 140ms ease;
+}
+
+html[data-welcome-motion='on'] :is(.btn, .text-button) > .lucide-arrow-right,
+html[data-welcome-motion='on'] .research-note button > .lucide-arrow-right,
+html[data-welcome-motion='on'] .nav-item > svg,
+html[data-welcome-motion='on'] .inp-dropzone > svg,
+html[data-welcome-motion='on'] .wm-photo-pagination button > svg,
+html[data-welcome-motion='on'] .wm-image-corner button > svg {
+  transition: translate 150ms cubic-bezier(.2, .7, .3, 1), transform 150ms ease;
+}
+
+html[data-welcome-motion='on'] :is(.inp-number-wrap, .inp-field select,
+  .review-row input, .review-row select, .rpt-slider-row input[type='number'],
+  .inp-dropzone) {
+  transition: border-color 140ms ease, background-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+html[data-welcome-motion='on'] :is(.guide-action svg,
+  .rpt-inline-details summary > svg, .rpt-methods > summary > svg) {
+  transition: transform 160ms ease;
+}
+
+html[data-welcome-motion='on'] :is(.btn, .icon-button, .inp-icon-button,
+  .segmented button, .wm-photo-pagination button, .wm-image-corner button,
+  .wm-lightbox-close, .wm-motion-control):active:not(:disabled) {
+  translate: 0 1px;
+}
+
+html[data-welcome-motion='on'] .inp-dropzone.inp-dragging > svg {
+  translate: 0 -3px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html[data-welcome-motion='on'] :is(.btn, .text-button):hover:not(:disabled) > .lucide-arrow-right,
+  html[data-welcome-motion='on'] .research-note button:hover > .lucide-arrow-right {
+    transform: none;
+    translate: 3px 0;
+  }
+
+  html[data-welcome-motion='on'] .nav-item:hover > svg {
+    translate: 2px 0;
+  }
+
+  html[data-welcome-motion='on'] .wm-photo-pagination button:hover > .lucide-chevron-right {
+    translate: 2px 0;
+  }
+
+  html[data-welcome-motion='on'] .wm-photo-pagination button:hover > .lucide-chevron-left {
+    translate: -2px 0;
+  }
+
+  html[data-welcome-motion='on'] .wm-image-corner button:hover > svg {
+    translate: 1px -1px;
+  }
+}
+
+html[data-welcome-motion='off'] :is(.btn, .icon-button, .inp-icon-button,
+  .nav-item, .step, .segmented button, .inp-tabs button, .rpt-tabs button,
+  .wm-chapter-tabs button, .wm-perspective-tabs button, .wm-photo-pagination button,
+  .wm-image-corner button, .wm-lightbox-close, .wm-motion-control,
+  .inp-number-wrap, .inp-field select, .review-row input, .review-row select,
+  .rpt-slider-row input[type='number'], .inp-dropzone),
+html[data-welcome-motion='off'] :is(.btn, .text-button, .nav-item, .inp-dropzone,
+  .wm-photo-pagination button, .wm-image-corner button) > svg,
+html[data-welcome-motion='off'] :is(.guide-action svg,
+  .rpt-inline-details summary > svg, .rpt-methods > summary > svg,
+  .research-note button > .lucide-arrow-right) {
+  transition: none !important;
+  translate: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(.btn, .icon-button, .inp-icon-button, .nav-item, .step, .segmented button,
+    .inp-tabs button, .rpt-tabs button, .wm-chapter-tabs button,
+    .wm-perspective-tabs button, .wm-photo-pagination button,
+    .wm-image-corner button, .wm-lightbox-close, .wm-motion-control,
+    .inp-number-wrap, .inp-field select, .review-row input, .review-row select,
+    .rpt-slider-row input[type='number'], .inp-dropzone),
+  :is(.btn, .text-button, .nav-item, .inp-dropzone,
+    .wm-photo-pagination button, .wm-image-corner button) > svg,
+  :is(.guide-action svg, .rpt-inline-details summary > svg,
+    .rpt-methods > summary > svg, .research-note button > .lucide-arrow-right) {
+    transition: none !important;
+    translate: none !important;
+  }
+}

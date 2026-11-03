@@ -1,0 +1,24 @@
+{
+  "file": "sysdag-synthetic-medical-report-upload-test-002.pdf",
+  "parse_status": 200,
+  "predict_status": 200,
+  "extracted_values": {
+    "resting_hr": 58.0,
+    "creatinine": 0.797,
+    "glucose": 97.0,
+    "age": 46,
+    "sex": "female",
+    "systolic_bp": 116,
+    "diastolic_bp": 72
+  },
+  "diagnostic_modality": "clinical_only",
+  "disease_probabilities": {
+    "I48": 0.13507109880447388,
+    "I50": 0.0357142873108387,
+    "I25": 0.03623271360993385,
+    "I21": 0.008875739760696888,
+    "I44": 0.005188528914004564
+  },
+  "health_score": 94.3,
+  "prevent_10y_cvd_percent": 1.273
+}

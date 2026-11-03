@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.vite/
+qa/screenshots/
+qa/*.pdf
+qa/*results.json
+motion-assets/**/snapshots/
+motion-assets/**/.hyperframes/

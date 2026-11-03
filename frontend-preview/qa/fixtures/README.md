@@ -1,0 +1,1 @@
+`recorded-waveform.csv` is a local copy of the existing project's `app/frontend/public/demo_files/sample_ecg_normal_500hz.csv`, used only for browser tests of waveform viewing. It is not the ECG of the synthetic clinical sample in `src/demo-record.json` and is not loaded by the application automatically. No network or original-project dependency is needed to run these tests.
