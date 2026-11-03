@@ -1,0 +1,271 @@
+{
+  "cached_vs_upload_probability_max_error": 1.7881393432617188e-07,
+  "rejected_sampled_records": [
+    {
+      "split": "train",
+      "reason": "ECG must contain finite samples in named lead columns"
+    }
+  ],
+  "mimic_embedding_parity": [
+    {
+      "split": "train",
+      "maximum_absolute_difference": 2.9802322387695312e-06
+    },
+    {
+      "split": "train",
+      "maximum_absolute_difference": 3.6507844924926758e-06
+    },
+    {
+      "split": "train",
+      "maximum_absolute_difference": 3.159046173095703e-06
+    },
+    {
+      "split": "val",
+      "maximum_absolute_difference": 1.6689300537109375e-06
+    },
+    {
+      "split": "val",
+      "maximum_absolute_difference": 2.384185791015625e-06
+    },
+    {
+      "split": "val",
+      "maximum_absolute_difference": 1.5497207641601562e-06
+    },
+    {
+      "split": "val",
+      "maximum_absolute_difference": 2.86102294921875e-06
+    },
+    {
+      "split": "test",
+      "maximum_absolute_difference": 3.516674041748047e-06
+    },
+    {
+      "split": "test",
+      "maximum_absolute_difference": 3.6507844924926758e-06
+    },
+    {
+      "split": "test",
+      "maximum_absolute_difference": 2.86102294921875e-06
+    },
+    {
+      "split": "test",
+      "maximum_absolute_difference": 2.7865171432495117e-06
+    }
+  ],
+  "sample_ecg_mi_500hz.csv": {
+    "status": 200,
+    "mode": "ecg_clinical",
+    "rhythm": {
+      "target": "AFIB rhythm annotation",
+      "probability": 0.00015475097461603582,
+      "threshold": 0.5518408417701721,
+      "above_review_marker": false,
+      "scope": "Internal PTB digital 12-lead research; no external clinical validation",
+      "test_metrics": {
+        "auroc": 0.9887507081388761,
+        "average_precision": 0.9567161748232186,
+        "brier": 0.01029641979374378,
+        "ece": 0.007957598719981916,
+        "precision": 0.9246575342465754,
+        "recall": 0.8881578947368421,
+        "f1": 0.9060402684563759,
+        "rows": 2103,
+        "positives": 152
+      }
+    },
+    "quality": {
+      "duration_seconds": 10.0,
+      "sample_rate_hz": 500,
+      "active_leads": [
+        "I",
+        "II",
+        "III",
+        "AVR",
+        "AVL",
+        "AVF",
+        "V1",
+        "V2",
+        "V3",
+        "V4",
+        "V5",
+        "V6"
+      ],
+      "amplitude_units": "mV (declared by upload contract; not independently verified)",
+      "status": "technical_checks_passed",
+      "warnings": [],
+      "certification": "Technical checks do not establish clinical signal quality or correct lead placement"
+    }
+  },
+  "sample_ecg_normal_500hz.csv": {
+    "status": 200,
+    "mode": "ecg_clinical",
+    "rhythm": {
+      "target": "AFIB rhythm annotation",
+      "probability": 5.006426727049984e-05,
+      "threshold": 0.5518408417701721,
+      "above_review_marker": false,
+      "scope": "Internal PTB digital 12-lead research; no external clinical validation",
+      "test_metrics": {
+        "auroc": 0.9887507081388761,
+        "average_precision": 0.9567161748232186,
+        "brier": 0.01029641979374378,
+        "ece": 0.007957598719981916,
+        "precision": 0.9246575342465754,
+        "recall": 0.8881578947368421,
+        "f1": 0.9060402684563759,
+        "rows": 2103,
+        "positives": 152
+      }
+    },
+    "quality": {
+      "duration_seconds": 10.0,
+      "sample_rate_hz": 500,
+      "active_leads": [
+        "I",
+        "II",
+        "III",
+        "AVR",
+        "AVL",
+        "AVF",
+        "V1",
+        "V2",
+        "V3",
+        "V4",
+        "V5",
+        "V6"
+      ],
+      "amplitude_units": "mV (declared by upload contract; not independently verified)",
+      "status": "technical_checks_passed",
+      "warnings": [],
+      "certification": "Technical checks do not establish clinical signal quality or correct lead placement"
+    }
+  },
+  "sample_ecg_af_500hz.csv": {
+    "status": 200,
+    "mode": "ecg_clinical",
+    "rhythm": {
+      "target": "AFIB rhythm annotation",
+      "probability": 0.6647071838378906,
+      "threshold": 0.5518408417701721,
+      "above_review_marker": true,
+      "scope": "Internal PTB digital 12-lead research; no external clinical validation",
+      "test_metrics": {
+        "auroc": 0.9887507081388761,
+        "average_precision": 0.9567161748232186,
+        "brier": 0.01029641979374378,
+        "ece": 0.007957598719981916,
+        "precision": 0.9246575342465754,
+        "recall": 0.8881578947368421,
+        "f1": 0.9060402684563759,
+        "rows": 2103,
+        "positives": 152
+      }
+    },
+    "quality": {
+      "duration_seconds": 10.0,
+      "sample_rate_hz": 500,
+      "active_leads": [
+        "I",
+        "II",
+        "III",
+        "AVR",
+        "AVL",
+        "AVF",
+        "V1",
+        "V2",
+        "V3",
+        "V4",
+        "V5",
+        "V6"
+      ],
+      "amplitude_units": "mV (declared by upload contract; not independently verified)",
+      "status": "technical_checks_passed",
+      "warnings": [],
+      "certification": "Technical checks do not establish clinical signal quality or correct lead placement"
+    }
+  },
+  "sample_1lead_smartwatch.csv": {
+    "status": 200,
+    "mode": "clinical_only",
+    "rhythm": null,
+    "quality": {
+      "duration_seconds": 10.0,
+      "sample_rate_hz": 500,
+      "active_leads": [
+        "I"
+      ],
+      "amplitude_units": "mV (declared by upload contract; not independently verified)",
+      "status": "technical_checks_passed",
+      "warnings": [],
+      "certification": "Technical checks do not establish clinical signal quality or correct lead placement"
+    }
+  },
+  "sample_6lead_kardia.csv": {
+    "status": 200,
+    "mode": "clinical_only",
+    "rhythm": null,
+    "quality": {
+      "duration_seconds": 10.0,
+      "sample_rate_hz": 500,
+      "active_leads": [
+        "I",
+        "II",
+        "III",
+        "AVR",
+        "AVL",
+        "AVF"
+      ],
+      "amplitude_units": "mV (declared by upload contract; not independently verified)",
+      "status": "technical_checks_passed",
+      "warnings": [],
+      "certification": "Technical checks do not establish clinical signal quality or correct lead placement"
+    }
+  },
+  "sample_scanned_ecg_3x4.png": {
+    "status": 200,
+    "mode": "clinical_only",
+    "rhythm": null,
+    "quality": null
+  },
+  "reject_flat": 422,
+  "reject_short": 422,
+  "reject_gain": 422,
+  "reject_noise": 422,
+  "rhythm_patient_bootstrap_95ci": {
+    "auroc": [
+      0.9746094139857671,
+      0.9963052551139209
+    ],
+    "average_precision": [
+      0.930916804258863,
+      0.9779539071433861
+    ],
+    "replicates": 200
+  },
+  "rhythm_subgroups": {
+    "female": {
+      "rows": 1014,
+      "positives": 71,
+      "auroc": 0.9941152748943288,
+      "average_precision": 0.9694059280346418
+    },
+    "male": {
+      "rows": 1089,
+      "positives": 81,
+      "auroc": 0.9840657456398196,
+      "average_precision": 0.9468173616851203
+    },
+    "age_under65": {
+      "rows": 1114,
+      "positives": 29,
+      "auroc": 0.9874463689814079,
+      "average_precision": 0.9102381235969517
+    },
+    "age_65plus": {
+      "rows": 975,
+      "positives": 117,
+      "auroc": 0.9876476799553723,
+      "average_precision": 0.9638278169193222
+    }
+  }
+}
