@@ -1,0 +1,46 @@
+{
+  "sample_ecg_mi_500hz.csv": {
+    "download": 200,
+    "predict": 200
+  },
+  "sample_ecg_normal_500hz.csv": {
+    "download": 200,
+    "predict": 200
+  },
+  "sample_scanned_ecg_3x4.png": {
+    "download": 200,
+    "predict": 200
+  },
+  "sample_lipid_hba1c_report.pdf": {
+    "download": 200,
+    "parse": 200,
+    "fields_exact": 9
+  },
+  "sample_lab_report.png": {
+    "download": 200,
+    "parse": 200,
+    "fields_exact": 9
+  },
+  "high": {
+    "status": 200,
+    "lead_mode": "12-lead",
+    "icd_count": 5,
+    "ptb_count": 5,
+    "health_score": 32.8
+  },
+  "moderate": {
+    "status": 200,
+    "lead_mode": "12-lead",
+    "icd_count": 5,
+    "ptb_count": 5,
+    "health_score": 69.5
+  },
+  "healthy": {
+    "status": 200,
+    "lead_mode": "12-lead",
+    "icd_count": 5,
+    "ptb_count": 5,
+    "health_score": 97.7
+  },
+  "health": 200
+}

@@ -1,0 +1,101 @@
+{
+  "artifacts": [
+    {
+      "sha256": "ee199f3781f4ae1f732973267f003da0a759ea12bddb0dd28a77faa60aca7997",
+      "file": "12_lead_ECGFounder.pth",
+      "url": "https://huggingface.co/spaces/Aayush1574/cardioscope-api/resolve/923ee38a8c054d013e3fcee3f821bb61965c56ed/models/12_lead_ECGFounder.pth",
+      "bytes": 369942585
+    },
+    {
+      "sha256": "6cef415d662cabf04ff7719c2a95666249aa90f0dfbd82840c0a8eb6fff51d03",
+      "file": "af_rhythm_head.joblib",
+      "url": "https://huggingface.co/spaces/Aayush1574/cardioscope-api/resolve/923ee38a8c054d013e3fcee3f821bb61965c56ed/models/af_rhythm_head.joblib",
+      "bytes": 30547
+    },
+    {
+      "sha256": "90c77747c6c7f25a55579618b62d34ceec5896e13a95235c6c656a2b9579136b",
+      "file": "best_multimodal_cvd.pt",
+      "url": "https://huggingface.co/spaces/Aayush1574/cardioscope-api/resolve/923ee38a8c054d013e3fcee3f821bb61965c56ed/models/best_multimodal_cvd.pt",
+      "bytes": 764100
+    },
+    {
+      "sha256": "70ed8aa42256e3453e30c5c933e185428b970c1cbc9cc675563322621c06666c",
+      "file": "clinical_stack.joblib",
+      "url": "https://huggingface.co/spaces/Aayush1574/cardioscope-api/resolve/923ee38a8c054d013e3fcee3f821bb61965c56ed/models/clinical_stack.joblib",
+      "bytes": 1118202
+    },
+    {
+      "sha256": "85657fcf1f8bf38f871c71b9a5831a20f108748bf73e9e5f576bfe6d308ee5d3",
+      "file": "clinical_transform.joblib",
+      "url": "https://huggingface.co/spaces/Aayush1574/cardioscope-api/resolve/923ee38a8c054d013e3fcee3f821bb61965c56ed/models/clinical_transform.joblib",
+      "bytes": 1538
+    },
+    {
+      "sha256": "ea0030e290b66aee1d5c6d188fc239f9852e0a18d0ab1a9d6cd2cdfa7790ac54",
+      "file": "lead_dropout_adapter.pt",
+      "url": "https://huggingface.co/spaces/Aayush1574/cardioscope-api/resolve/923ee38a8c054d013e3fcee3f821bb61965c56ed/models/lead_dropout_adapter.pt",
+      "bytes": 1063905
+    },
+    {
+      "sha256": "051d1703cfb0f7a67ddbdb90f61558e37ec35fb5981a2d466379ab92eb221068",
+      "file": "longitudinal_10y_head.pkl",
+      "url": "https://huggingface.co/spaces/Aayush1574/cardioscope-api/resolve/923ee38a8c054d013e3fcee3f821bb61965c56ed/models/longitudinal_10y_head.pkl",
+      "bytes": 305703
+    },
+    {
+      "sha256": "0eddab0b614b35153abc2fe3d24e9d6bb67f0858a9348c43f006d6d1161366e6",
+      "file": "mimic_adapter_calibration.json",
+      "url": "https://huggingface.co/spaces/Aayush1574/cardioscope-api/resolve/923ee38a8c054d013e3fcee3f821bb61965c56ed/models/mimic_adapter_calibration.json",
+      "bytes": 11102
+    },
+    {
+      "sha256": "94d304788a00f1fa019f371e3764dc6e95905cd49001306b8256195a9be05107",
+      "file": "mimic_projection_adapter.pt",
+      "url": "https://huggingface.co/spaces/Aayush1574/cardioscope-api/resolve/923ee38a8c054d013e3fcee3f821bb61965c56ed/models/mimic_projection_adapter.pt",
+      "bytes": 141871
+    },
+    {
+      "sha256": "4f92ccf172b7c71e3acff449616c9ca3783d678ae92d6388a29346031156e32c",
+      "file": "modality_calibration.json",
+      "url": "https://huggingface.co/spaces/Aayush1574/cardioscope-api/resolve/923ee38a8c054d013e3fcee3f821bb61965c56ed/models/modality_calibration.json",
+      "bytes": 1372
+    },
+    {
+      "sha256": "8d0eae03f4301885c26d333310e072ba927dec23a723e09a9fdb6dfb8db7396d",
+      "file": "model_quantized.onnx",
+      "url": "https://huggingface.co/spaces/Aayush1574/cardioscope-api/resolve/923ee38a8c054d013e3fcee3f821bb61965c56ed/models/model_quantized.onnx",
+      "bytes": 243979
+    },
+    {
+      "sha256": "99bd3f824265d0a434f2e1c3e07b0cf40259332ee33818011cbca601bf33e5c9",
+      "file": "ptbxl_probability_calibration.json",
+      "url": "https://huggingface.co/spaces/Aayush1574/cardioscope-api/resolve/923ee38a8c054d013e3fcee3f821bb61965c56ed/models/ptbxl_probability_calibration.json",
+      "bytes": 1423
+    },
+    {
+      "sha256": "15604050920daaca3a4bdd8751d67f863458814ceb9dad2f641a2507b72bd586",
+      "file": "ptbxl_superclass_head.pt",
+      "url": "https://huggingface.co/spaces/Aayush1574/cardioscope-api/resolve/923ee38a8c054d013e3fcee3f821bb61965c56ed/models/ptbxl_superclass_head.pt",
+      "bytes": 1071569
+    },
+    {
+      "sha256": "b49d806097c7b73fbbfd789ce632c795b886791dfb86924b76e6fdbf13bde573",
+      "file": "research_metrics.json",
+      "url": "https://huggingface.co/spaces/Aayush1574/cardioscope-api/resolve/923ee38a8c054d013e3fcee3f821bb61965c56ed/models/research_metrics.json",
+      "bytes": 30731
+    },
+    {
+      "sha256": "2b05e2f293dd6d221d5ade7ef90803a872051404a48d65fd242012092703f306",
+      "file": "research_upgrade_metrics.json",
+      "url": "https://huggingface.co/spaces/Aayush1574/cardioscope-api/resolve/923ee38a8c054d013e3fcee3f821bb61965c56ed/models/research_upgrade_metrics.json",
+      "bytes": 8956
+    },
+    {
+      "sha256": "1cadfb5bf31f7c0343647d157925a7887788d455bde70c3874b919e2ebb98f88",
+      "file": "slow_train_status.json",
+      "url": "https://huggingface.co/spaces/Aayush1574/cardioscope-api/resolve/923ee38a8c054d013e3fcee3f821bb61965c56ed/models/slow_train_status.json",
+      "bytes": 293
+    }
+  ],
+  "revision": "923ee38a8c054d013e3fcee3f821bb61965c56ed"
+}

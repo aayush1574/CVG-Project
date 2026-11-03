@@ -1,0 +1,7 @@
+name = "cardioscope-research"
+pages_build_output_dir = "../app/frontend/dist"
+compatibility_date = "2026-11-02"
+
+[vars]
+HF_SPACE_URL = "https://aayush1574-cardioscope-api.hf.space"
+
