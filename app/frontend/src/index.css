@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f5f8f8;color:#153046}
+input,select{outline-color:#087e82}
+button:disabled{opacity:.5;cursor:not-allowed}
+.report-card{border:1px solid #e2e8f0;border-radius:1.5rem;background:white;padding:1.5rem;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.report-help{margin-top:.5rem;color:#475569;font-size:.875rem;line-height:1.5}
+.report-kicker{color:#0e7490;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.form-control{border:1px solid #e2e8f0;border-radius:.75rem;background:white;padding:.625rem .75rem}
+.upload-box{border:1px dashed #94a3b8;border-radius:1rem;padding:1.25rem}
+.print-summary{display:none}
+@media print{
+  @page{size:A4;margin:14mm}
+  body{background:#fff;color:#111827;font:10pt Arial,sans-serif}
+  header,main>div:not(:has(#clinical-summary)),main>p,#clinical-summary>*:not(.print-summary){display:none!important}
+  main{max-width:none!important;padding:0!important}
+  main>div{display:block!important;margin:0!important}
+  #clinical-summary{display:block!important}
+  .print-summary{display:block!important}
+  .print-summary h1{font-size:20pt;font-weight:700;margin-bottom:2mm}
+  .print-summary h2{font-size:12pt;font-weight:700;border-bottom:1px solid #94a3b8;margin:5mm 0 2mm;padding-bottom:1mm}
+  .print-summary p{margin:1.5mm 0}
+  .print-summary .print-warning{background:#fef3c7;padding:2mm;font-weight:700}
+  .print-summary .print-small{font-size:9pt;color:#475569}
+  .print-summary table{width:100%;border-collapse:collapse;margin:2mm 0}
+  .print-summary th,.print-summary td{border-bottom:1px solid #cbd5e1;padding:1.5mm;text-align:left;vertical-align:top}
+  .print-summary .print-values{display:grid;grid-template-columns:1fr 1fr;gap:1mm 5mm}
+  .print-summary ul{padding-left:5mm}
+  .print-summary li{margin:1mm 0}
+  .print-summary table,.print-summary li,.print-summary .print-values div{break-inside:avoid}
+}

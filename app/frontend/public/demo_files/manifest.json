@@ -1,0 +1,20 @@
+{
+  "records": {
+    "mi": 77,
+    "normal": 1,
+    "af": 17
+  },
+  "sample_rate": 500,
+  "report_expected_values": {
+    "total_cholesterol": 240,
+    "hdl": 40,
+    "ldl": 155,
+    "triglycerides": 225,
+    "fasting_blood_sugar": 120,
+    "hba1c": 6.2,
+    "creatinine": 1.1,
+    "systolic_bp": 145,
+    "diastolic_bp": 90
+  },
+  "notice": "Real de-identified ECGs paired with illustrative clinical values from a different person. Case labels describe source data, not guaranteed model predictions."
+}
