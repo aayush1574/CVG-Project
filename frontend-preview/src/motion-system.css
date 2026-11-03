@@ -1,0 +1,134 @@
+/* Kinetic type, scroll depth, and a shared accessible motion preference. */
+.app-motion-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 10px;
+  white-space: nowrap;
+  color: #315f53;
+}
+.app-motion-control:disabled { opacity: 1; color: #566d61; }
+.app-motion-control:hover:not(:disabled) { color: #0b695d; }
+.wm-scroll-track { position: fixed; inset: 0 0 auto; height: 2px; z-index: 25; pointer-events: none; }
+.wm-scroll-track > div { height: 100%; background: #137d70; transform-origin: left; transform: scaleX(var(--wm-scroll-progress, 0)); }
+
+.wm-welcome .wm-hero-copy { animation: none; }
+.wm-brand-word { display: block; font: inherit; }
+.wm-line-mask { display: block; overflow: hidden; font: inherit; padding-bottom: .1em; margin-bottom: -.1em; }
+.wm-kinetic-line { display: block; font: inherit; transform-origin: left bottom; }
+.wm-motion-on .wm-brand-word { animation: wm-brand-in 700ms cubic-bezier(.22, 1, .36, 1) both; }
+.wm-motion-on .wm-kinetic-line { animation: wm-type-in 850ms cubic-bezier(.22, 1, .36, 1) 100ms both; }
+.wm-motion-on .wm-line-mask:nth-child(2) .wm-kinetic-line { animation-delay: 230ms; }
+.wm-motion-on .wm-hero-copy > p,
+.wm-motion-on .wm-hero-copy .hero-actions,
+.wm-motion-on .wm-hero-copy .hero-footnote { animation: wm-copy-in 500ms ease-out 330ms both; }
+.wm-motion-on .wm-hero-copy .hero-actions { animation-delay: 420ms; }
+.wm-motion-on .wm-hero-copy .hero-footnote { animation-delay: 480ms; }
+
+.wm-heading-word { display: inline-block; }
+.wm-motion-on .wm-revealed .wm-heading-word { animation: wm-type-in 650ms cubic-bezier(.22, 1, .36, 1) both; }
+.wm-motion-on .wm-revealed .wm-heading-word + .wm-heading-word { animation-delay: 90ms; }
+.wm-motion-on .wm-chapter-details li { animation: wm-copy-in 330ms ease-out calc(var(--item, 0) * 55ms + 80ms) both; }
+
+.wm-motion-on .wm-hero-media {
+  inset: -36px;
+  width: calc(100% + 72px);
+  height: calc(100% + 72px);
+  transform: translate3d(0, calc(var(--wm-hero-shift, 0) * 1px), 0);
+}
+.wm-motion-on .wm-perspective-image > img {
+  scale: 1.1;
+  translate: 0 calc(var(--wm-photo-shift, 0) * 1px);
+}
+
+.wm-workflow { position: relative; isolation: isolate; }
+.wm-contour-frame {
+  position: absolute;
+  right: 0;
+  top: 12px;
+  bottom: 28px;
+  width: min(57%, 650px);
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 62%);
+}
+.wm-contour-field { opacity: .13; }
+.wm-motion-on .wm-contour-lines { transition: transform 180ms ease-out; }
+
+/* A shared state machine coordinates the real-time field and selected-step rail. */
+.wm-workflow .wm-contour-field { transition: opacity 220ms ease; }
+.wm-workflow[data-interaction-state='tracking'] .wm-contour-field { opacity: .21; }
+.wm-workflow[data-interaction-state='pressed'] .wm-contour-field { opacity: .27; }
+.wm-workflow[data-interaction-state='morphing'] .wm-contour-field { opacity: .23; }
+.wm-workflow[data-interaction-state='settling'] .wm-contour-field { opacity: .15; }
+.wm-workflow .wm-chapter-tabs {
+  --wm-tab-gap: 28px;
+  position: relative;
+  gap: var(--wm-tab-gap);
+}
+.wm-workflow .wm-chapter-tabs > button[aria-selected='true'] { border-bottom-color: transparent; }
+.wm-tab-rail {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 2px;
+  width: calc((100% - var(--wm-tab-gap) * 2) / 3);
+  background: var(--teal);
+  pointer-events: none;
+  transform: translateX(calc(var(--selected-index, 0) * (100% + var(--wm-tab-gap))));
+  transition: transform 420ms cubic-bezier(.2, .8, .2, 1), height 140ms ease;
+}
+.wm-workflow[data-interaction-state='pressed'] .wm-tab-rail { height: 3px; }
+@media (max-width: 1180px) { .wm-workflow .wm-chapter-tabs { --wm-tab-gap: 18px; } }
+@media (max-width: 950px) { .wm-workflow .wm-chapter-tabs { --wm-tab-gap: 16px; } }
+@media (max-width: 380px) { .wm-workflow .wm-chapter-tabs { --wm-tab-gap: 11px; } }
+
+@keyframes wm-type-in {
+  from { opacity: 0; transform: translate3d(0, 105%, 0) rotate(2deg); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) rotate(0); }
+}
+@keyframes wm-brand-in {
+  from { opacity: 0; transform: translate3d(0, 15px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes wm-copy-in {
+  from { opacity: 0; transform: translate3d(0, 7px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+/* The same switch applies to old and new effects, including dialogs and reports. */
+html[data-welcome-motion='off'] *,
+html[data-welcome-motion='off'] *::before,
+html[data-welcome-motion='off'] *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+html[data-welcome-motion='off'] :is(.btn, .icon-button, .text-button, .wm-photo-pagination button):is(:hover, :active),
+html[data-welcome-motion='off'] .btn:hover svg,
+html[data-welcome-motion='off'] .wm-perspective-image:hover > img,
+html[data-welcome-motion='off'] .wm-chapter-tabs > button:hover .wm-tab-arrow { transform: none !important; }
+html[data-welcome-motion='off'] .wm-scroll-track { display: none; }
+html[data-welcome-motion='off'] .wm-reveal { opacity: 1; transform: none; }
+
+@media (max-width: 950px) {
+  .topbar-right { gap: 14px; }
+  .app-motion-control span { display: none; }
+  .wm-contour-frame { width: 45%; opacity: .6; }
+}
+@media (max-width: 700px) {
+  .topbar-right { gap: 8px; }
+  .app-motion-control { min-width: 36px; }
+  .wm-contour-frame { width: 62%; top: 15px; bottom: auto; height: 150px; opacity: .65; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .wm-motion-on .wm-hero-media { inset: 0; width: 100%; height: 100%; transform: none; }
+  .wm-motion-on .wm-perspective-image > img { translate: none; scale: none; }
+  .wm-reveal { opacity: 1; transform: none; }
+  .wm-scroll-track { display: none; }
+  :is(.btn, .icon-button, .text-button, .wm-photo-pagination button):is(:hover, :active),
+  .btn:hover svg, .wm-perspective-image:hover > img,
+  .wm-chapter-tabs > button:hover .wm-tab-arrow { transform: none !important; }
+}
+@media print { .wm-scroll-track, .app-motion-control { display: none; } }
