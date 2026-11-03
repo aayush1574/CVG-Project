@@ -1,0 +1,29 @@
+{
+  "digital_status": 200,
+  "calibration": {
+    "method": "validation-fitted sigmoid",
+    "thresholds": {
+      "NORM": 0.26616285881216806,
+      "MI": 0.31908167775907387,
+      "STTC": 0.33476556168731497,
+      "CD": 0.30373234456268033,
+      "HYP": 0.2521666659096253
+    },
+    "note": "Calibration applies to standard digital 12-lead inputs only; mapped thresholds preserve the original decisions."
+  },
+  "icd_flags": {
+    "I48": false,
+    "I50": false,
+    "I25": true,
+    "I21": null,
+    "I44": null
+  },
+  "reliability": {
+    "icd_waveform_fusion": "withheld_preprocessing_parity_failed",
+    "clinical_only": "limited discrimination; weak classes abstain",
+    "ecg_patterns": "calibrated research scores",
+    "health_index": "heuristic; no outcome validation"
+  },
+  "invalid_input_status": 422,
+  "missing_inputs_abstain": true
+}

@@ -1,0 +1,59 @@
+{
+  "mi": {
+    "status": 200,
+    "mode": "ecg_clinical",
+    "signal_status": "technical_checks_passed",
+    "af_probability": 0.00015475097461603582,
+    "evidence_sections": 6
+  },
+  "normal": {
+    "status": 200,
+    "mode": "ecg_clinical",
+    "signal_status": "technical_checks_passed",
+    "af_probability": 5.006426727049984e-05,
+    "evidence_sections": 6
+  },
+  "af": {
+    "status": 200,
+    "mode": "ecg_clinical",
+    "signal_status": "technical_checks_passed",
+    "af_probability": 0.6647069454193115,
+    "evidence_sections": 6
+  },
+  "one_lead": {
+    "status": 200,
+    "mode": "clinical_only",
+    "signal_status": "technical_checks_passed",
+    "af_probability": null,
+    "evidence_sections": 5
+  },
+  "six_lead": {
+    "status": 200,
+    "mode": "clinical_only",
+    "signal_status": "technical_checks_passed",
+    "af_probability": null,
+    "evidence_sections": 5
+  },
+  "scan": {
+    "status": 200,
+    "mode": "clinical_only",
+    "signal_status": null,
+    "af_probability": null,
+    "evidence_sections": 4
+  },
+  "clinical_only": 200,
+  "sample_lipid_hba1c_report.pdf": {
+    "status": 200,
+    "exact_fields": 9,
+    "source_evidence": true
+  },
+  "sample_lab_report.png": {
+    "status": 200,
+    "exact_fields": 9,
+    "source_evidence": true
+  },
+  "simulate": 200,
+  "flat_rejection": 422,
+  "page": 200,
+  "health": 200
+}

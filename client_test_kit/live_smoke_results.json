@@ -1,0 +1,78 @@
+{
+  "tested_at_utc": "2026-11-02T17:23:59.728724+00:00",
+  "frontend_status": 200,
+  "space_health_status": 200,
+  "pages_health_status": 200,
+  "modes": {
+    "clinical_only": {
+      "http_status": 200,
+      "lead_mode": null,
+      "diagnostic_modality": "clinical_only",
+      "condition_count": 5,
+      "ecg_superclass_count": 0,
+      "prevent_10y_risk": 14.791,
+      "learned_cohort_10y_risk": 42.623,
+      "ratios_present": {
+        "pulse_pressure": true,
+        "mean_arterial_pressure": true,
+        "non_hdl_cholesterol": true,
+        "tg_to_hdl_ratio": true,
+        "tyg_index": true,
+        "egfr_ckd_epi_2021": true
+      }
+    },
+    "12_lead_wfdb": {
+      "http_status": 200,
+      "lead_mode": "12-lead",
+      "diagnostic_modality": "ecg_clinical",
+      "condition_count": 5,
+      "ecg_superclass_count": 5,
+      "prevent_10y_risk": 14.791,
+      "learned_cohort_10y_risk": 42.623,
+      "ratios_present": {
+        "pulse_pressure": true,
+        "mean_arterial_pressure": true,
+        "non_hdl_cholesterol": true,
+        "tg_to_hdl_ratio": true,
+        "tyg_index": true,
+        "egfr_ckd_epi_2021": true
+      }
+    },
+    "6_lead_csv": {
+      "http_status": 200,
+      "lead_mode": "6-lead",
+      "diagnostic_modality": "clinical_only",
+      "condition_count": 5,
+      "ecg_superclass_count": 5,
+      "prevent_10y_risk": 14.791,
+      "learned_cohort_10y_risk": 42.623,
+      "ratios_present": {
+        "pulse_pressure": true,
+        "mean_arterial_pressure": true,
+        "non_hdl_cholesterol": true,
+        "tg_to_hdl_ratio": true,
+        "tyg_index": true,
+        "egfr_ckd_epi_2021": true
+      }
+    },
+    "1_lead_csv": {
+      "http_status": 200,
+      "lead_mode": "1-lead",
+      "diagnostic_modality": "clinical_only",
+      "condition_count": 5,
+      "ecg_superclass_count": 5,
+      "prevent_10y_risk": 14.791,
+      "learned_cohort_10y_risk": 42.623,
+      "ratios_present": {
+        "pulse_pressure": true,
+        "mean_arterial_pressure": true,
+        "non_hdl_cholesterol": true,
+        "tg_to_hdl_ratio": true,
+        "tyg_index": true,
+        "egfr_ckd_epi_2021": true
+      }
+    }
+  },
+  "simulate_status": 200,
+  "simulate_feature_delta_count": 6
+}
